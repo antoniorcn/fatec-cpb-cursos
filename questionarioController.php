@@ -2,8 +2,23 @@
 		$db = new PDO('mysql:host=localhost;dbname=quitanda;charset=utf8', 'root', '');
 
 		$nome = $_REQUEST['txtNome'];
-		$button = $_REQUEST['txtButton'];
-		$areas = $_REQUEST['txtArea'];
+		$email = $_REQUEST['txtEmail'];
+		$telefone = $_REQUEST['txtTelefone'];
+		$telefonetipo = $_REQUEST['txtTelefoneTipo'];
+		$endereco = $_REQUEST['txtEndereco'];
+		$bairro = $_REQUEST['txtBairro'];
+		$cidade = $_REQUEST['txtCidade'];
+		$cep = $_REQUEST['txtCEP'];
+		$escolaridade = $_REQUEST['txtEscolaridade'];
+		$instituicao = $_REQUEST['txtInstituicao'];
+		$empresa = $_REQUEST['txtEmpresa'];
+		$area = $_REQUEST['txtArea[]'];
+		$carreiraespec = $_REQUEST['txtCarreiraEspec'];
+		$tecemergespec =  $_REQUEST['txtTecEmergEspec'];
+		$automespec =  $_REQUEST['txtAutomEspec'];
+		$robotespec =  $_REQUEST['txtRobotEspec'];
+		$outrosepec =  $_REQUEST['txtOutrosEpec'];
+		$horario =  $_REQUEST['txtHorario[]'];
 
 
 		if (isset($areas)) {
