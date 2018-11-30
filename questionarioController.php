@@ -1,39 +1,49 @@
 	<?php
-		$db = new PDO('mysql:host=localhost;dbname=quitanda;charset=utf8', 'root', '');
 
-		$nome = $_REQUEST['txtNome'];
-		$email = $_REQUEST['txtEmail'];
-		$telefone = $_REQUEST['txtTelefone'];
-		$telefonetipo = $_REQUEST['txtTelefoneTipo'];
-		$endereco = $_REQUEST['txtEndereco'];
-		$bairro = $_REQUEST['txtBairro'];
-		$cidade = $_REQUEST['txtCidade'];
-		$cep = $_REQUEST['txtCEP'];
-		$escolaridade = $_REQUEST['txtEscolaridade'];
-		$instituicao = $_REQUEST['txtInstituicao'];
-		$empresa = $_REQUEST['txtEmpresa'];
-		$area = $_REQUEST['txtArea[]'];
-		$carreiraespec = $_REQUEST['txtCarreiraEspec'];
-		$tecemergespec =  $_REQUEST['txtTecEmergEspec'];
-		$automespec =  $_REQUEST['txtAutomEspec'];
-		$robotespec =  $_REQUEST['txtRobotEspec'];
-		$outrosepec =  $_REQUEST['txtOutrosEpec'];
-		$horario =  $_REQUEST['txtHorario[]'];
+		function default_value($var, $defaultValue) {
+			if (isset($_REQUEST[$var])) { 
+				return $_REQUEST[$var];
+			} else {
+				return $defaultValue;
+			}
+		}
+
+		$db = new PDO('mysql:host=localhost;dbname=questionarios;charset=utf8', 'root', '');
+
+		$nome = default_value('txtNome', "");
+		$email = default_value('txtEmail', "");
+		$telefone = default_value('txtTelefone', "");
+		$telefonetipo = default_value('txtTelefoneTipo', "");
+		$endereco = default_value('txtEndereco', "");
+		$bairro = default_value('txtBairro', "");
+		$cidade = default_value('txtCidade', "");
+		$cep = default_value('txtCEP', "");
+		$escolaridade = default_value('txtEscolaridade', "");
+		$instituicao = default_value('txtInstituicao', "");
+		$empresa = default_value('txtEmpresa', "");
+		$areas = default_value('txtArea', []);
+		$carreiraespec = default_value('txtCarreiraEspec', "");
+		$tecemergespec =  default_value('txtTecEmergEspec', "");
+		$automespec =  default_value('txtAutomEspec', "");
+		$robotespec =  default_value('txtRobotEspec', "");
+		$outrosepec =  default_value('txtOutrosEpec', "");
+		$horarios =  default_value('txtHorario', []);
+		$button =   default_value('txtButton', "");
 
 
 		if (isset($areas)) {
 			foreach($areas as $area) {
+				echo "Area: $area <br/>";
 			}
 		}
-		/*
+
+		if (isset($horarios)) {
+			foreach($horarios as $horario) {
+				echo "Horario: $horario <br/>";
+			}
+		}		
 		session_start();
 		if ($button == "submeter") {
-			$qtd = $_REQUEST['txtQtd'];
-			$metrica = $_REQUEST['txtMetrica'];
-			$preco = $_REQUEST['txtPreco'];
-			$vitaminas = $_REQUEST['txtVitaminas'];
-			$org = $_REQUEST['txtOrganico'];
-
 			$sql = "INSERT INTO produtos (id, nome, metrica, quantidade, preco, vitaminas, organico) ";
 			$sql = $sql . " VALUES (:id, :nome, :med, :qtd, :valor, :vitaminas, :org)";
 			$stmt = $db->prepare($sql);
