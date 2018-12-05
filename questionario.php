@@ -193,34 +193,38 @@
 
 						<div class="row">
 							<div class="col-lg-6">
-								<label class="check-container">Redes de computadores
+								<label class="check-container my-tooltip">Redes de computadores
 									<input class="form-check-input" type="checkbox"
 									name="txtArea[]" id="txtRedes" value="redes">
 									<span class="checkmark"></span>										
+									<span class="my-tooltiptext">Cursos sobre instalação, administração, otimização e manutenção de redes de informação, roteadores, switches, proxies e gateways</span>									
 								</label>									
 							</div>
 							<div class="col-lg-6">
-								<label class="check-container">Banco de dados
+								<label class="check-container my-tooltip">Banco de dados
 									<input class="form-check-input" type="checkbox"
 									name="txtArea[]" id="txtDb"  value="db"/>
-									<span class="checkmark"></span>										
+									<span class="checkmark"></span>	
+									<span class="my-tooltiptext">Cursos sobre instalação, administração, otimização e manutenção de sistemas de bancos de dados, relacionais ou não relacionais</span>									
 								</label>									
 							</div>
 						</div>
 
 						<div class="row">
 							<div class="col-lg-6">
-								<label class="check-container">Programação
-									<input class="form-check-input" type="checkbox"
-									name="txtArea[]" id="txtProg" value="prog">
-									<span class="checkmark"></span>										
-								</label>									
+								<label class="check-container my-tooltip">Programação
+									<input class="form-check-input  my-tooltip" type="checkbox"
+											name="txtArea[]" id="txtProg" value="prog"/>
+									<span class="my-tooltiptext">Cursos envolvendo algoritmos, lógica de programação, programação orientada a objetos, padrões de projetos, tecnicas de programação, programação de jogos digitais, web e mobile.</span>																					
+									<span class="checkmark"></span>
+								</label>							
 							</div>
 							<div class="col-lg-6">
-								<label class="check-container">Data Science
+								<label class="check-container my-tooltip">Data Science
 									<input class="form-check-input" type="checkbox"
 									name="txtArea[]" id="txtDscience"  value="dscience"/>
-									<span class="checkmark"></span>										
+									<span class="checkmark"></span>		
+									<span class="my-tooltiptext">Cursos sobre algoritmos para classificação de dados, regressão linear, redes neurais, Knn e sistemas de armazenamento de dados sem relacionamento como Mongodb, Cassandra</span>								
 								</label>									
 							</div>
 						</div>
@@ -228,10 +232,11 @@
 
 						<div class="row">
 							<div class="col-lg-6">
-								<label class="check-container">Tecnologias Emergentes
+								<label class="check-container my-tooltip">Tecnologias Emergentes
 									<input class="form-check-input" type="checkbox"
 									name="txtArea[]" id="txtTecEmerg" value="tec_emerg">
-									<span class="checkmark"></span>										
+									<span class="checkmark"></span>		
+									<span class="my-tooltiptext">Cursos sobre novas tecnologias que auxiliam no desenvolvimento de sistemas e automação de tarefas, como ....</span>								
 								</label>									
 							</div>
 							<div class="col-lg-6">
@@ -245,26 +250,28 @@
 
 						<div class="row">
 							<div class="col-lg-6">
-								<label class="check-container">Automação
+								<label class="check-container my-tooltip">Automação
 									<input class="form-check-input" type="checkbox"
 									name="txtArea[]" id="txtAutom" value="autom">
-									<span class="checkmark"></span>										
+									<span class="checkmark"></span>				
+									<span class="my-tooltiptext">Cursos sobre sistemas para integração de dados, scripts de automação de tarefas computacionais, sistemas ERP e automação comercial</span>														
 								</label>									
 							</div>
 							<div class="col-lg-6">
 								<div class="wrap-input1" data-validate = "Informe mais detalhes sobre que tipo de automação">
 									<input id="txtAutomEspec" name="txtAutomEspec" type="text" class="input1" placeholder="Especifique"/>
-									<span class="shadow-input1"></span>									
+									<span class="shadow-input1"></span>	
 								</div>
 							</div>
 						</div>
 
 						<div class="row">
 							<div class="col-lg-6">
-								<label class="check-container">Robótica/IoT
+								<label class="check-container my-tooltip">Robótica/IoT
 									<input class="form-check-input" type="checkbox"
 									name="txtArea[]" id="txtRobot" value="robot">
-									<span class="checkmark"></span>										
+									<span class="checkmark"></span>	
+									<span class="my-tooltiptext">Cursos envolvendo desenvolvimento de hardware, arduino, sistemas de coleta e consolidação de dados, relatórios, comunicação entre dispositivos.</span>									
 								</label>									
 							</div>
 							<div class="col-lg-6">
@@ -415,7 +422,7 @@
 											<span class="checkmark"></span>										
 										</label>
 									</td>
-									<td><label class="check-container">
+									<td><label class="check-container" placeholder="Teste de Placeholder">
 											<input class="form-check-input" type="checkbox"
 											name="txtHorario[]" id="txtHorario" value="sex-noite">
 											<span class="checkmark"></span>										

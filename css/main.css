@@ -217,6 +217,7 @@ select.input1 {
   height: 50px;
   border-radius: 25px;
   padding: 0 30px;
+  border-width: 0;
 }
 select.input1 + .shadow-input1 {
   border-radius: 25px;
@@ -353,6 +354,47 @@ select.input1 + .shadow-input1 {
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
+}
+
+
+/*---------------------------------------------*/
+.my-tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.my-tooltip .my-tooltiptext {
+  visibility: hidden;
+  width: 360px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px;
+  border-radius: 6px;
+  top: -5px;
+  left: 105%; 
+
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1000;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.my-tooltip:hover .my-tooltiptext {
+  visibility: visible;
+}
+
+.my-tooltip .my-tooltiptext::after {
+  content: " ";
+  position: absolute;
+  top: 10%;
+  right: 100%; /* To the left of the tooltip */
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent black transparent transparent;
 }
 
 
