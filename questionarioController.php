@@ -8,7 +8,9 @@
 			}
 		}
 
-		$db = new PDO('mysql:host=localhost;dbname=questionarios;charset=utf8', 'root', '');
+		$contato_id = 1;
+
+		$db = new PDO('mysql:host=localhost;dbname=fatec_cursos;charset=utf8', 'root', '');
 
 		$nome = default_value('txtNome', "");
 		$email = default_value('txtEmail', "");
@@ -18,6 +20,7 @@
 		$bairro = default_value('txtBairro', "");
 		$cidade = default_value('txtCidade', "");
 		$cep = default_value('txtCEP', "");
+		$estado = default_value('txtEstado', "");
 		$escolaridade = default_value('txtEscolaridade', "");
 		$instituicao = default_value('txtInstituicao', "");
 		$empresa = default_value('txtEmpresa', "");
@@ -31,46 +34,94 @@
 		$button =   default_value('txtButton', "");
 
 
-		if (isset($areas)) {
+		/* if (isset($areas)) {
 			foreach($areas as $area) {
 				echo "Area: $area <br/>";
 			}
-		}
-
+		}*/
+		echo implode(",", $areas) . "<br/>";
+		/*
 		if (isset($horarios)) {
 			foreach($horarios as $horario) {
 				echo "Horario: $horario <br/>";
 			}
-		}		
+		}	*/	
 		session_start();
-		if ($button == "submeter") {
-			// $sql = "INSERT INTO produtos (id, nome, metrica, quantidade, preco, vitaminas, organico) ";
-			// $sql = $sql . " VALUES (:id, :nome, :med, :qtd, :valor, :vitaminas, :org)";
-			// $stmt = $db->prepare($sql);
-			// $stmt->bindValue(':id', 0, PDO::PARAM_INT);
-			// $stmt->bindValue(':nome', $nome, PDO::PARAM_STR);
-			// $stmt->bindValue(':med', $metrica, PDO::PARAM_STR);
-			// $stmt->bindValue(':qtd', $qtd, PDO::PARAM_INT);
-			// $stmt->bindValue(':valor', $preco, PDO::PARAM_INT);
-			// $stmt->bindValue(':vitaminas', $vitaminas, PDO::PARAM_STR);
-			// $stmt->bindValue(':org', $org, PDO::PARAM_STR);
-			// $stmt->execute();
-			// $result = $stmt->rowCount();
-			// $_SESSION['MENSAGEM'] = 'Registro inserido com sucesso';
-		} else if ($button == "pesquisar") {
-			// $sql = "SELECT * FROM produtos WHERE nome like :nome";
-			// $stmt = $db->prepare($sql);
-			// $stmt->bindValue(':nome', '%' . $nome . '%', PDO::PARAM_STR);
-			// $stmt->execute();
-			// $result = $stmt->rowCount();
-			// echo "Foram encontrados $result produtos";
-			// $listaProdutos = array();
-			// forEach( $stmt as $row ) {
-			// 	array_push($listaProdutos, $row);
-			// }
-			// $_SESSION['LISTA'] = $listaProdutos;
+		if (isset($areas) && count($areas) > 0 && isset($horarios) && count($horarios) > 0) {
+			$error = 0;
+			if ($button == "submeter") {
+				$sql = "INSERT INTO contatos (id, nome, email, telefone, tel_tipo, endereco, bairro, ";
+				$sql = $sql . " cidade, estado, cep, escolaridade, ultima_instituicao, empresa_nome) ";
+				$sql = $sql . " VALUES (0, :nome, :email, :tel, :tel_tipo, :endereco, :bairro, :cidade, ";
+				$sql = $sql . " :estado, :cep, :escolaridade, :ultima_instituicao, :empresa_nome)";
+				$stmt = $db->prepare($sql);
+				$stmt->bindValue(':nome', $nome, PDO::PARAM_STR);
+				$stmt->bindValue(':email', $email, PDO::PARAM_STR);
+				$stmt->bindValue(':tel', $telefone, PDO::PARAM_STR);
+				$stmt->bindValue(':tel_tipo', $telefonetipo, PDO::PARAM_STR);
+				$stmt->bindValue(':endereco', $endereco, PDO::PARAM_STR);
+				$stmt->bindValue(':bairro', $bairro, PDO::PARAM_STR);
+				$stmt->bindValue(':cidade', $cidade, PDO::PARAM_STR);
+				$stmt->bindValue(':estado', $estado, PDO::PARAM_STR);
+				$stmt->bindValue(':cep', $cep, PDO::PARAM_STR);
+				$stmt->bindValue(':escolaridade', $escolaridade, PDO::PARAM_STR);
+				$stmt->bindValue(':ultima_instituicao', $instituicao, PDO::PARAM_STR);
+				$stmt->bindValue(':empresa_nome', $empresa, PDO::PARAM_STR);
+				$stmt->execute();
+				$result = $stmt->rowCount();
+				$contato_id = $db->lastInsertId();
+				if ($result != 1) {
+					$error = 1;
+				}
 
+				// Verifica as respostas das perguntas e adiciona-as no banco de dados;
+				$sql = "SELECT * FROM perguntas";
+				$stmt = $db->prepare($sql);
+				$stmt->execute();
+				$result = $stmt->rowCount();
+				forEach( $stmt as $row ) {
+					$key = in_array($row['valor'], $areas);
+					//echo "Analisando pergunta : " . $row['id'] . " - " . $row['valor'] . " Localizado: $key <br/>";
+					
+					if ( $key == true ) { 
+						$pergunta_id = $row['id'];
+						$pergunta_espec = default_value($row['espec_variable'], "");
+						$sql = "INSERT INTO respostas (id, contato_id, pergunta_id, pergunta_espec) VALUES (0, :contato, :pergunta, :pergunta_espec)";
+						$stmt = $db->prepare($sql);
+						$stmt->bindValue(':contato', $contato_id, PDO::PARAM_INT);
+						$stmt->bindValue(':pergunta', $pergunta_id, PDO::PARAM_INT);
+						$stmt->bindValue(':pergunta_espec', $pergunta_espec, PDO::PARAM_STR);
+						$stmt->execute();
+						$result = $stmt->rowCount();
+						if ($result != 1) {
+							$error = 1;
+						}
+					}
+				}
+
+				foreach($horarios as $horario) {
+					$sql = "INSERT INTO horarios (id, contato_id, horario) VALUES (0, :contato, :horario)";
+					$stmt = $db->prepare($sql);
+					$stmt->bindValue(':contato', $contato_id, PDO::PARAM_INT);
+					$stmt->bindValue(':horario', $horario, PDO::PARAM_STR);
+					$stmt->execute();
+					$result = $stmt->rowCount();
+					if ($result != 1) {
+						$error = 1;
+					}
+				}
+	
+			}
+			if ($result == 1) {
+				$_SESSION['MENSAGEM'] = 'Questionario inserido com sucesso.';
+				header('Location: ./success.php');
+			} else { 
+				$_SESSION['MENSAGEM'] = 'Erro ao registrar o questionário, por favor tente novamente mais tarde.';
+				header('Location: ./questionario.php');
+			}
+		} else { 
+			$_SESSION['MENSAGEM'] = 'Por favor escolha ao menos um tipo de curso e um horário em que você tenha disponibilidade';
+			header('Location: ./questionario.php');
 		}
-
-		header('Location: ./questionario.php');
+		
 ?>

@@ -35,14 +35,26 @@
 	</head>
 
 	<body>
-		<?php
-			session_start();
-			if (isset($_SESSION['MENSAGEM'])) {
-					echo $_SESSION['MENSAGEM'];
-					unset($_SESSION['MENSAGEM']);
-			}
-		 ?>
 		<div class="contact1">
+			<?php
+				session_start();
+				
+				$db = new PDO('mysql:host=localhost;dbname=fatec_cursos;charset=utf8', 'root', '');
+
+				if (isset($_SESSION['MENSAGEM'])) {
+						$msg = $_SESSION['MENSAGEM'];
+			?>
+				<div class="alert alert-danger alert-dismissible fade show" role="alert">
+					<strong><?=$msg?></strong>
+					<a href="javascript: window.history.go(-1);">clique aqui para retornar à página com os dados do questionário</a>
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+			<?php 
+				unset($_SESSION['MENSAGEM']);
+				} 
+			?>			
 			<div class="container-contact1">
 				<form action="./questionarioController.php" class="validate-form">
 					<span class="contact1-form-title">
@@ -78,29 +90,69 @@
 							</div>
 						</div>
 					</div>
-					<div class="wrap-input1 validate-input" data-validate = "Informe seu endereço completo">
-						<input id="txtEndereco" name="txtEndereco" type="text" class="input1" placeholder="Endereço" validation="not_empty"/>
-						<span class="shadow-input1"></span>
-					</div>
 					<div class="form-group">
 						<div class="row">
-							<div class="col-md-5">
+							<div class="col-md-8">
+								<div class="wrap-input1 validate-input" data-validate = "Informe seu endereço completo">
+									<input id="txtEndereco" name="txtEndereco" type="text" class="input1" placeholder="Endereço" validation="not_empty"/>
+									<span class="shadow-input1"></span>
+								</div>
+							</div>
+							<div class="col-md-4">
 								<div class="wrap-input1 validate-input" data-validate = "Informe o nome do seu bairro">
 									<input id="txtBairro" name="txtBairro" type="text" class="input1" placeholder="Bairro" validation="not_empty"/>
 									<span class="shadow-input1"></span>
 								</div>		
-							</div>
+							</div>				
+						</div>
+					</div>			
+					<div class="form-group">
+						<div class="row">
 							<div class="col-md-5">
 								<div class="wrap-input1 validate-input" data-validate = "Informe o nome da sua cidade">
 									<input id="txtCidade" name="txtCidade" type="text" class="input1"  placeholder="Cidade" validation="not_empty"/>
 									<span class="shadow-input1"></span>
 								</div>		
 							</div>
-							<div class="col-md-2">
+							<div class="col-md-3">
 								<div class="wrap-input1 validate-input" data-validate = "Informe o seu CEP">								
 									<input id="txtCEP" name="txtCEP" type="text" class="input1"  placeholder="CEP"/>
 									<span class="shadow-input1"></span>
 								</div>		
+							</div>
+							<div class="col-md-4">							
+								<div class="wrap-input1 validate-input" data-validate = "Informe o estado onde mora">
+									<select id="txtEstado" name="txtEstado" class="input1">
+										<option value="sp" selected>São Paulo</option>
+										<option value="ac">Acre</option>
+										<option value="al">Alagoas</option>
+										<option value="ap">Amapá</option>
+										<option value="am">Amazonas</option>
+										<option value="ba">Bahia</option>
+										<option value="ce">Ceará</option>
+										<option value="df">Distrito Federal</option>
+										<option value="es">Espírito Santo</option>
+										<option value="go">Goiás</option>
+										<option value="ma">Maranhão</option>
+										<option value="mt">Mato Grosso</option>
+										<option value="ms">Mato Grosso do Sul</option>
+										<option value="mg">Minas Gerais</option>
+										<option value="pa">Pará</option>
+										<option value="pb">Paraíba</option>
+										<option value="pr">Paraná</option>
+										<option value="pe">Pernambuco</option>
+										<option value="pi">Piauí</option>
+										<option value="rj">Rio de Janeiro</option>
+										<option value="rn">Rio Grande do Norte</option>
+										<option value="rs">Rio Grande do Sul</option>
+										<option value="ro">Rondônia</option>
+										<option value="rr">Roraima</option>
+										<option value="sc">Santa Catarina</option>
+										<option value="se">Sergipe</option>
+										<option value="to">Tocantins</option>
+									</select>
+									<span class="shadow-input1"></span>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -131,7 +183,55 @@
 						<span class="contact1-form-title">
 						Quais são suas áreas de interesse
 						</span>
-						<div class="row">
+
+						<?php
+							// Verifica as respostas das perguntas e adiciona-as no banco de dados;
+							$sql = "SELECT * FROM perguntas order by indice";
+							$stmt = $db->prepare($sql);
+							$stmt->execute();
+							$result = $stmt->rowCount();
+							$new_row = true;
+							$count = 0;
+							$flush_text = false;
+							$text_all = "";
+							$texto = "";
+							$lista = array();
+							forEach( $stmt as $row ) { 
+								array_push($lista, $row);
+							} 
+							for ($i = 0; $i < count($lista); $i++) {
+								$row = $lista[$i];
+								$texto = $texto . "<div class=\"col-lg-6\">\n";
+								$texto = $texto . "		<label class=\"check-container  my-tooltip\">" . $row['texto'];
+								$texto = $texto . "			<input type=\"checkbox\" name=\"txtArea[]\" id=\"" . $row['valor'] . "\"";
+								$texto = $texto . " 			value=\"" . $row['valor'] . "\">\n";
+								$texto = $texto . "			<span class=\"checkmark\"></span>\n";
+								$texto = $texto . "			<span class=\"my-tooltiptext\">" . $row['descricao'] . "</span>\n";
+								$texto = $texto . "		</label>\n";
+								$texto = $texto . "</div>\n";
+								$count++;
+
+								if ($row['espec_precisa'] == 1) { 
+									$texto = $texto . "<div class=\"col-lg-6\">\n";
+									$texto = $texto . "		<div class=\"wrap-input1\" data-validate = \"" . $row['espec_texto'] . "\">\n";
+									$texto = $texto . "				<input id=" . $row['espec_variable'] . "\" name=\"" . $row['espec_variable'];
+									$texto = $texto . "\" type=\"text\" class=\"input1\" placeholder=\"Especifique\"/>\n";
+									$texto = $texto . "					<span class=\"shadow-input1\"></span>\n";
+									$texto = $texto . "		</div>\n";
+									$texto = $texto . "	</div>\n";
+								}
+
+								if (  $i == (count($lista) - 1) || $row['espec_precisa'] == 1 || $lista[$i + 1]['espec_precisa'] == 1 ) { 
+									$text_all = $text_all . "<div class=\"row\">\n";
+									$text_all = $text_all . $texto;
+									$text_all = $text_all . "</div>\n";
+									$texto = "";
+								}
+							}
+							echo $text_all; 
+						?>
+
+						<!-- <div class="row">
 							<div class="col-lg-6">
 								<label class="check-container">Carreira Profissional
 									<input type="checkbox"
@@ -145,7 +245,7 @@
 									<span class="shadow-input1"></span>
 								</div>
 							</div>
-						</div>
+						</div>						
 
 						<div class="row">
 							<div class="col-lg-6">
@@ -297,7 +397,7 @@
 								</div>	
 							</div>
 						</div>
-					</div>
+					</div> -->
 
 					<div class="form-group">
 						<span class="contact1-form-title">
