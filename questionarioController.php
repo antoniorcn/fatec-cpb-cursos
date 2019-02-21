@@ -10,7 +10,7 @@
 
 		$contato_id = 1;
 
-		$db = new PDO('mysql:host=localhost;dbname=fatec_cursos;charset=utf8', 'root', '');
+		$db = new PDO('mysql:host=localhost;dbname=fatec_cursos;charset=utf8', 'fatec', 'fRcgOYqNefSNv5qQruLL');
 
 		$nome = default_value('txtNome', "");
 		$email = default_value('txtEmail', "");

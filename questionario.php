@@ -25,6 +25,7 @@
 	<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
 	<!--===============================================================================================-->
 	<script src="vendor/select2/select2.min.js"></script>
+	<script src="js/cep.js"></script>
 	<!--===============================================================================================-->
 	<script src="vendor/tilt/tilt.jquery.min.js"></script>		
 		<script >
@@ -39,7 +40,7 @@
 			<?php
 				session_start();
 				
-				$db = new PDO('mysql:host=localhost;dbname=fatec_cursos;charset=utf8', 'root', '');
+				$db = new PDO('mysql:host=localhost;dbname=fatec_cursos;charset=utf8', 'fatec', 'fRcgOYqNefSNv5qQruLL');
 
 				if (isset($_SESSION['MENSAGEM'])) {
 						$msg = $_SESSION['MENSAGEM'];
@@ -114,12 +115,15 @@
 									<span class="shadow-input1"></span>
 								</div>		
 							</div>
-							<div class="col-md-3">
+							<div class="col-md-2">
 								<div class="wrap-input1 validate-input" data-validate = "Informe o seu CEP">								
 									<input id="txtCEP" name="txtCEP" type="text" class="input1"  placeholder="CEP"/>
 									<span class="shadow-input1"></span>
 								</div>		
 							</div>
+							<div class="col-md-1">
+								<button type="button" id="txtButtonCEP" class="btn" aria-hidden="true"><i class="fa fa-search"></i></button>	
+							</div>							
 							<div class="col-md-4">							
 								<div class="wrap-input1 validate-input" data-validate = "Informe o estado onde mora">
 									<select id="txtEstado" name="txtEstado" class="input1">
@@ -160,11 +164,11 @@
 					<div class="wrap-input1 validate-input" data-validate = "Informe sua escolaridade">
 						<select id="txtEscolaridade" name="txtEscolaridade" class="input1">
 							<option disabled selected>Escolaridade</option>
-							<option>Pós graduado</option>
-							<option>Superior completo</option>
-							<option>Ensino médio completo</option>
-							<option>Fundamental completo</option>
-							<option>Fundamental incompleto</option>
+							<option value="pos_graduacao">Pós graduação</option>
+							<option value="superior">Ensino Superior</option>
+							<option value="medio">Ensino médio</option>
+							<option value="fundamental">Fundamental</option>
+							<option value="sem_escolaridade">Sem escolaridade</option>
 						</select>
 						<span class="shadow-input1"></span>
 					</div>
@@ -181,7 +185,7 @@
 
 					<div class="form-group">
 						<span class="contact1-form-title">
-						Quais são suas áreas de interesse
+						Quais são os cursos ou áreas de interesse, marque todos aqueles que você pretende cursar
 						</span>
 
 						<?php
@@ -230,174 +234,6 @@
 							}
 							echo $text_all; 
 						?>
-
-						<!-- <div class="row">
-							<div class="col-lg-6">
-								<label class="check-container">Carreira Profissional
-									<input type="checkbox"
-										name="txtArea[]" id="txtCarreira" value="carreira">
-									<span class="checkmark"></span>										
-								</label>
-							</div>
-							<div class="col-lg-6">
-								<div class="wrap-input1" data-validate = "Informe mais detalhes sobre a carreira profissional">
-									<input id="txtCarreiraEspec" name="txtCarreiraEspec" type="text" class="input1" placeholder="Especifique"/>
-									<span class="shadow-input1"></span>
-								</div>
-							</div>
-						</div>						
-
-						<div class="row">
-							<div class="col-lg-6">
-								<label class="check-container">Logistica
-									<input class="form-check-input" type="checkbox"
-									name="txtArea[]" id="txtLogistica" value="logistica">
-									<span class="checkmark"></span>										
-								</label>									
-							</div>
-							<div class="col-lg-6">
-								<label class="check-container">Comércio Exterior
-									<input class="form-check-input" type="checkbox"
-									name="txtArea[]" id="txtComex" value="comex"/>
-									<span class="checkmark"></span>										
-								</label>									
-							</div>
-						</div>
-
-						<div class="row">
-							<div class="col-lg-6">
-								<label class="check-container">Recursos Humanos
-									<input class="form-check-input" type="checkbox"
-									name="txtArea[]" id="txtRH" value="rh">
-									<span class="checkmark"></span>										
-								</label>									
-							</div>
-							<div class="col-lg-6">
-								<label class="check-container">Marketing
-								<input class="form-check-input" type="checkbox"
-										name="txtArea[]" id="txtMarketing"  value="marketing"/>
-										<span class="checkmark"></span>										
-								</label>									
-							</div>
-						</div>
-
-						<div class="row">
-							<div class="col-lg-6">
-								<label class="check-container">Finanças
-									<input class="form-check-input" type="checkbox"
-									name="txtArea[]" id="txtFin" value="financas">
-									<span class="checkmark"></span>										
-								</label>									
-							</div>
-						</div>
-
-						<div class="row">
-							<div class="col-lg-6">
-								<label class="check-container my-tooltip">Redes de computadores
-									<input class="form-check-input" type="checkbox"
-									name="txtArea[]" id="txtRedes" value="redes">
-									<span class="checkmark"></span>										
-									<span class="my-tooltiptext">Cursos sobre instalação, administração, otimização e manutenção de redes de informação, roteadores, switches, proxies e gateways</span>									
-								</label>									
-							</div>
-							<div class="col-lg-6">
-								<label class="check-container my-tooltip">Banco de dados
-									<input class="form-check-input" type="checkbox"
-									name="txtArea[]" id="txtDb"  value="db"/>
-									<span class="checkmark"></span>	
-									<span class="my-tooltiptext">Cursos sobre instalação, administração, otimização e manutenção de sistemas de bancos de dados, relacionais ou não relacionais</span>									
-								</label>									
-							</div>
-						</div>
-
-						<div class="row">
-							<div class="col-lg-6">
-								<label class="check-container my-tooltip">Programação
-									<input class="form-check-input  my-tooltip" type="checkbox"
-											name="txtArea[]" id="txtProg" value="prog"/>
-									<span class="my-tooltiptext">Cursos envolvendo algoritmos, lógica de programação, programação orientada a objetos, padrões de projetos, tecnicas de programação, programação de jogos digitais, web e mobile.</span>																					
-									<span class="checkmark"></span>
-								</label>							
-							</div>
-							<div class="col-lg-6">
-								<label class="check-container my-tooltip">Data Science
-									<input class="form-check-input" type="checkbox"
-									name="txtArea[]" id="txtDscience"  value="dscience"/>
-									<span class="checkmark"></span>		
-									<span class="my-tooltiptext">Cursos sobre algoritmos para classificação de dados, regressão linear, redes neurais, Knn e sistemas de armazenamento de dados sem relacionamento como Mongodb, Cassandra</span>								
-								</label>									
-							</div>
-						</div>
-
-
-						<div class="row">
-							<div class="col-lg-6">
-								<label class="check-container my-tooltip">Tecnologias Emergentes
-									<input class="form-check-input" type="checkbox"
-									name="txtArea[]" id="txtTecEmerg" value="tec_emerg">
-									<span class="checkmark"></span>		
-									<span class="my-tooltiptext">Cursos sobre novas tecnologias que auxiliam no desenvolvimento de sistemas e automação de tarefas, como ....</span>								
-								</label>									
-							</div>
-							<div class="col-lg-6">
-								<div class="wrap-input1" data-validate = "Informe mais detalhes sobre as tecnologias emergentes">
-									<input id="txtTecEmergEspec" name="txtTecEmergEspec" type="text" class="input1" placeholder="Especifique"/>
-									<span class="shadow-input1"></span>								
-								</div>
-							</div>
-						</div>
-
-
-						<div class="row">
-							<div class="col-lg-6">
-								<label class="check-container my-tooltip">Automação
-									<input class="form-check-input" type="checkbox"
-									name="txtArea[]" id="txtAutom" value="autom">
-									<span class="checkmark"></span>				
-									<span class="my-tooltiptext">Cursos sobre sistemas para integração de dados, scripts de automação de tarefas computacionais, sistemas ERP e automação comercial</span>														
-								</label>									
-							</div>
-							<div class="col-lg-6">
-								<div class="wrap-input1" data-validate = "Informe mais detalhes sobre que tipo de automação">
-									<input id="txtAutomEspec" name="txtAutomEspec" type="text" class="input1" placeholder="Especifique"/>
-									<span class="shadow-input1"></span>	
-								</div>
-							</div>
-						</div>
-
-						<div class="row">
-							<div class="col-lg-6">
-								<label class="check-container my-tooltip">Robótica/IoT
-									<input class="form-check-input" type="checkbox"
-									name="txtArea[]" id="txtRobot" value="robot">
-									<span class="checkmark"></span>	
-									<span class="my-tooltiptext">Cursos envolvendo desenvolvimento de hardware, arduino, sistemas de coleta e consolidação de dados, relatórios, comunicação entre dispositivos.</span>									
-								</label>									
-							</div>
-							<div class="col-lg-6">
-								<div class="wrap-input1" data-validate = "Informe mais detalhes sobre quais cursos de Robótica e/ou IoT">
-									<input id="txtRobotEspec" name="txtRobotEspec" type="text" class="input1" placeholder="Especifique"/>
-									<span class="shadow-input1"></span>								
-								</div>
-							</div>
-						</div>
-
-						<div class="row">
-							<div class="col-lg-6">
-								<label class="check-container">Outros
-								<input class="form-check-input" type="checkbox"
-										name="txtArea[]" id="txtOutros" value="outros">
-										<span class="checkmark"></span>										
-								</label>									
-							</div>
-							<div class="col-lg-6">
-								<div class="wrap-input1" data-validate = "Informe quais outros cursos">
-									<input id="txtOutrosEpec" name="txtOutrosEpec" type="text" class="input1" placeholder="Informe quais outros cursos"/>
-									<span class="shadow-input1"></span>								
-								</div>	
-							</div>
-						</div>
-					</div> -->
 
 					<div class="form-group">
 						<span class="contact1-form-title">
