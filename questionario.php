@@ -190,7 +190,14 @@
 
 						<?php
 							// Verifica as respostas das perguntas e adiciona-as no banco de dados;
-							$sql = "SELECT * FROM perguntas order by indice";
+							$categoria = "";
+							$categoria_changed = false;
+							$sql = "SELECT p.*";
+							$sql = $sql . "FROM ";
+							$sql = $sql . "categorias as c inner join perguntas as p ";
+							$sql = $sql . "on p.categoria = c.texto ";
+							// $sql = $sql . "WHERE 1 ";
+							$sql = $sql . "ORDER BY c.indice, p.indice";
 							$stmt = $db->prepare($sql);
 							$stmt->execute();
 							$result = $stmt->rowCount();
@@ -203,19 +210,31 @@
 							forEach( $stmt as $row ) { 
 								array_push($lista, $row);
 							} 
-							for ($i = 0; $i < count($lista); $i++) {
+							// for ($i = 0; $i < count($lista); $i++) { 
+							// 	$row = $lista[$i];
+							//	echo "<span class=\"contact1-form-title\" style=\"margin-top:40px; margin-bottom:0px;\">" . $row['categoria'] . " - " . $row['texto'] . "</span>\n";
+							// }
+
+							for ($i = 0; $i < count($lista) - 1; $i++) {
 								$row = $lista[$i];
+								$proximo_registro = $lista[$i + 1];
+								$registro_especialista = $row['espec_precisa'];
+								$ultimo_registro = ($i == (count($lista) - 1));
+								$proximo_registro_especialista = $proximo_registro['espec_precisa'];
+								$ultima_coluna = ($count >= 1);
+								$categoria_changed = strcasecmp($row['categoria'], $categoria);
+
 								$texto = $texto . "<div class=\"col-lg-6\">\n";
 								$texto = $texto . "		<label class=\"check-container  my-tooltip\">" . $row['texto'];
 								$texto = $texto . "			<input type=\"checkbox\" name=\"txtArea[]\" id=\"" . $row['valor'] . "\"";
-								$texto = $texto . " 			value=\"" . $row['valor'] . "\">\n";
+								$texto = $texto . " 			value=\"" . $row['valor'] . "\"/>\n";
 								$texto = $texto . "			<span class=\"checkmark\"></span>\n";
 								$texto = $texto . "			<span class=\"my-tooltiptext\">" . $row['descricao'] . "</span>\n";
 								$texto = $texto . "		</label>\n";
 								$texto = $texto . "</div>\n";
 								$count++;
 
-								if ($row['espec_precisa'] == 1) { 
+								if ($registro_especialista) { 
 									$texto = $texto . "<div class=\"col-lg-6\">\n";
 									$texto = $texto . "		<div class=\"wrap-input1\" data-validate = \"" . $row['espec_texto'] . "\">\n";
 									$texto = $texto . "				<input id=" . $row['espec_variable'] . "\" name=\"" . $row['espec_variable'];
@@ -224,13 +243,32 @@
 									$texto = $texto . "		</div>\n";
 									$texto = $texto . "	</div>\n";
 								}
-
-								if (  $i == (count($lista) - 1) || $row['espec_precisa'] == 1 || $lista[$i + 1]['espec_precisa'] == 1 ) { 
+								
+								if (	$ultimo_registro
+										|| $registro_especialista
+										|| $proximo_registro_especialista
+										|| $ultima_coluna
+										|| $categoria_changed) {
+									$text_all = $text_all . "<label>UR: $ultimo_registro - RE: $registro_especialista - PR: $proximo_registro_especialista - UC: $ultima_coluna - CC: $categoria_changed  - CAA: $categoria - CAN: ".$row['categoria']." TXT:" . $row['texto'] . "</label>";
+									if ($categoria_changed) {
+										// $text_all = $text_all . "<span class=\"contact1-form-title\" style=\"margin-top:40px; margin-bottom:0px;\">" . $row['categoria'] . " - " . $row['texto'] . "</span>\n";										
+										// $text_all = $text_all  . "<div class=\"row\" style=\"margin-top:30px; margin-bottom:0px;\">\n";
+										// $text_all = $text_all  . "	<div class=\"col-lg-12\">\n";
+										// $texto = $texto . "		<span class=\"contact1-form-title\">$categoria</span>";
+										$text_all = $text_all  . "			<span class=\"contact1-form-title\" style=\"margin-top:40px; margin-bottom:0px;\">" . $row['categoria'] . "</span>\n";
+										// $categoria = $row['categoria'];
+										// $text_all = $text_all  . "	</div>\n";
+										// $text_all = $text_all  . "</div>\n";
+									}											
 									$text_all = $text_all . "<div class=\"row\">\n";
 									$text_all = $text_all . $texto;
 									$text_all = $text_all . "</div>\n";
 									$texto = "";
+									$count = 0;
 								}
+//								if ($categoria_changed) {
+//									$categoria = $row['categoria'];
+//								}
 							}
 							echo $text_all; 
 						?>
